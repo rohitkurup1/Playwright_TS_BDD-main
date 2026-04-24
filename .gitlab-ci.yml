@@ -1,0 +1,70 @@
+image: mcr.microsoft.com/playwright:v1.58.2-jammy
+
+stages:
+  - test
+  - report
+
+variables:
+  HEADLESS: "true"
+  BROWSER: "chromium"
+
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - npm ci
+
+test:chromium:
+  stage: test
+  variables:
+    BROWSER: "chromium"
+  script:
+    - npm run test
+  artifacts:
+    when: always
+    paths:
+      - reports/
+      - test-results/
+    expire_in: 7 days
+  allow_failure: false
+
+test:firefox:
+  stage: test
+  variables:
+    BROWSER: "firefox"
+  script:
+    - npm run test
+  artifacts:
+    when: always
+    paths:
+      - reports/
+      - test-results/
+    expire_in: 7 days
+  allow_failure: true
+
+test:webkit:
+  stage: test
+  variables:
+    BROWSER: "webkit"
+  script:
+    - npm run test
+  artifacts:
+    when: always
+    paths:
+      - reports/
+      - test-results/
+    expire_in: 7 days
+  allow_failure: true
+
+generate_report:
+  stage: report
+  dependencies:
+    - test:chromium
+  script:
+    - npm run report_multi
+  artifacts:
+    paths:
+      - reports/
+    expire_in: 30 days
+  when: always

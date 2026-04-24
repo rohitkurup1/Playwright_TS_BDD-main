@@ -1,0 +1,34 @@
+{
+  "name": "playwright_bdd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "report": "npx ts-node generate-report.ts",
+    "report_multi": "npx ts-node generate-multi-report.ts",
+    "test": "npx cucumber-js --exit",
+    "test:chromium": "BROWSER=chromium npx cucumber-js --exit",
+    "test:firefox": "BROWSER=firefox npx cucumber-js --exit",
+    "test:webkit": "BROWSER=webkit npx cucumber-js --exit",
+    "test:parallel": "npx cucumber-js --parallel 2 --exit",
+    "test:parallel:4": "npx cucumber-js --parallel 4 --exit",
+    "test:report": "npm run test ; npm run report",
+    "test:report_multi": "npm run test ; npm run report_multi"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.6.0",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.2.3",
+    "cucumber-html-reporter": "^7.2.0",
+    "multiple-cucumber-html-reporter": "^3.10.0",
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "winston": "^3.19.0"
+  }
+}
