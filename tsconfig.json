@@ -5,6 +5,8 @@
         "moduleResolution": "node10",
         "types": ["node"],
         "strict": true,
+        "sourceMap": true,
+        "inlineSources": true,
         "esModuleInterop": true,
         "ignoreDeprecations": "6.0",
         "resolveJsonModule": true

@@ -21,6 +21,7 @@
         "formatOptions": {
             "colorsEnabled": false,
             "forceColor": true
-        }
+        },
+        "timeout": 300000
     }
 }

@@ -2,18 +2,19 @@
   "name": "playwright_bdd",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.js","test:chromium": "$env:BROWSER=chromium; npx cucumber-js --exit",
   "scripts": {
     "report": "npx ts-node generate-report.ts",
     "report_multi": "npx ts-node generate-multi-report.ts",
     "test": "npx cucumber-js --exit",
-    "test:chromium": "BROWSER=chromium npx cucumber-js --exit",
+    "test:chromium": "cross-env BROWSER=chromium npx cucumber-js --exit",
     "test:firefox": "BROWSER=firefox npx cucumber-js --exit",
     "test:webkit": "BROWSER=webkit npx cucumber-js --exit",
     "test:parallel": "npx cucumber-js --parallel 2 --exit",
     "test:parallel:4": "npx cucumber-js --parallel 4 --exit",
     "test:report": "npm run test ; npm run report",
-    "test:report_multi": "npm run test ; npm run report_multi"
+    "test:report_multi": "npm run test ; npm run report_multi",
+    "debug": "node --inspect-brk -r ts-node/register ./node_modules/@cucumber/cucumber/bin/cucumber-js --exit"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "@cucumber/cucumber": "^12.6.0",
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.2.3",
+    "cross-env": "^10.1.0",
     "cucumber-html-reporter": "^7.2.0",
     "multiple-cucumber-html-reporter": "^3.10.0",
     "ts-node": "^10.9.2"
