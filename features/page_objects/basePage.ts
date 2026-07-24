@@ -31,6 +31,8 @@ export class BasePage {
     async navigateTo(url: string) {
         logger.info(`Navigating to ${url}`);
         await this.page.goto(url);
+        let date  = new Date();
+    
     }
 
     async getPageTitle(): Promise<string> {

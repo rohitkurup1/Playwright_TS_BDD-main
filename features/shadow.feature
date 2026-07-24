@@ -10,7 +10,8 @@ Feature: Shadow elements
       |   12:00 PM |     3:00 PM |
       |    1:00 PM |     4:00 PM |
       |    2:00 PM |     5:00 PM |
-    Then I see "yes, i like some snacks!" in the Snacks field
+    Then I see "yes, i like some snacks" in the Snacks field
+    And I compare the page screenshot with baseline "shadow-page"
 
   @regression
   Scenario Outline: Validating Shadow elements for <Snacks>

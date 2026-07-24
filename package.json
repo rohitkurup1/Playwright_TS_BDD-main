@@ -2,7 +2,8 @@
   "name": "playwright_bdd",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js","test:chromium": "$env:BROWSER=chromium; npx cucumber-js --exit",
+  "main": "index.js",
+  "test:chromium": "$env:BROWSER=chromium; npx cucumber-js --exit",
   "scripts": {
     "report": "npx ts-node generate-report.ts",
     "report_multi": "npx ts-node generate-multi-report.ts",
@@ -24,9 +25,12 @@
     "@cucumber/cucumber": "^12.6.0",
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.2.3",
+    "@types/pngjs": "^6.0.5",
     "cross-env": "^10.1.0",
     "cucumber-html-reporter": "^7.2.0",
     "multiple-cucumber-html-reporter": "^3.10.0",
+    "pixelmatch": "^7.2.0",
+    "pngjs": "^7.0.0",
     "ts-node": "^10.9.2"
   },
   "dependencies": {

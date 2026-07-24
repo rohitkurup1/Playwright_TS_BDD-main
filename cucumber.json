@@ -22,6 +22,9 @@
             "colorsEnabled": false,
             "forceColor": true
         },
-        "timeout": 300000
+        "timeout": 300000,
+        "stepTimeout": 300000,
+        "hookTimeout": 300000,
+        "scenarioTimeout": 300000
     }
 }

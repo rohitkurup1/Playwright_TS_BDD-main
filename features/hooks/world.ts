@@ -13,6 +13,19 @@ export class CustomWorld extends World {
     credentials: { [key: string]: any } = {};
     userData: { [key: string]: any } = {};
     logs: string[] = [];
+    testInfo!: {
+        title: string;
+        file: string;
+        projectName: string;
+        retry: number;
+        status: string;
+        timeout: number;
+        workerIndex: number;
+        parallelIndex: number;
+        scenarioName: string;
+        browser: string;
+        testError: string;
+    };
 
     constructor(options: IWorldOptions) {
         super(options);
@@ -25,6 +38,19 @@ export class CustomWorld extends World {
         this.pageFixtures = options.parameters.pageFixtures;
         this.credentials = getCredentialsData(process.env.ENVIRONMENT || "RSDEV1");
         this.userData = getUserData(process.env.USER_NAME || "user1");
+        this.testInfo = {
+            title: '',
+            file: '',
+            projectName: process.env.BROWSER || 'chromium',
+            retry: 0,
+            status: 'not-started',
+            timeout: parseInt(process.env.STEP_TIMEOUT || '60000', 10),
+            workerIndex: 0,
+            parallelIndex: 0,
+            scenarioName: '',
+            browser: process.env.BROWSER || 'chromium',
+            testError: '',
+        };
         const path = require('path');
     }
 

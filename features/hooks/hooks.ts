@@ -12,13 +12,33 @@ BeforeAll(function () {
     }
 });
 
-Before(async function (this: CustomWorld) {
+Before(async function (this: CustomWorld, scenario) {
     console.log(`###### Before hook executed ######`);
+    this.testInfo = {
+        title: scenario.pickle.name,
+        file: (scenario as any).sourceLocation?.uri || (scenario as any).sourceLocation?.path || 'unknown',
+        projectName: process.env.BROWSER || 'chromium',
+        retry: 0,
+        status: 'running',
+        timeout: parseInt(process.env.STEP_TIMEOUT || '60000', 10),
+        workerIndex: 0,
+        parallelIndex: 0,
+        scenarioName: scenario.pickle.name,
+        browser: process.env.BROWSER || 'chromium',
+        testError: '',
+    };
     await this.init();
     await this.context.tracing.start({ screenshots: true, snapshots: true });
 });
 
 After(async function (this: CustomWorld, scenario) {
+    this.testInfo.status = scenario.result?.status?.toString() || 'unknown';
+    this.testInfo.testError = scenario.result?.message || '';
+    const testInfoJson = JSON.stringify(this.testInfo, null, 2);
+    console.log('Current testInfo:');
+    console.log(testInfoJson);
+    this.attach(testInfoJson, 'application/json');
+
     console.log(`###### After hook executed for scenario: ${scenario.pickle.name} with status: ${scenario.result?.status} ######`);
     
     if (scenario.result?.status === Status.FAILED && this.page) {
