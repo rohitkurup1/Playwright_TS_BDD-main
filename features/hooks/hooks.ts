@@ -2,6 +2,7 @@ import { Before, BeforeAll, After, AfterAll, Status, AfterStep } from '@cucumber
 import fs from 'fs';
 import path from 'path';
 import { CustomWorld } from './world';
+import { createJiraIssue } from '../../utils/jiraHelper';
 
 BeforeAll(function () {
     console.log(`$$$$$ BeforeAll hook executed $$$$$`);    
@@ -58,6 +59,21 @@ After(async function (this: CustomWorld, scenario) {
         }
         
         console.log(`Screenshot attached to report`);
+        // Optionally create a Jira issue when enabled via env var
+        try {
+            if (process.env.LOG_JIRA === 'true') {
+                const summary = `BDD Test failed: ${scenario.pickle.name}`;
+                const description = [
+                    `Scenario: ${scenario.pickle.name}`,
+                    `File: ${(scenario as any).sourceLocation?.uri || (scenario as any).sourceLocation?.path || 'unknown'}`,
+                    `Error: ${scenario.result?.message || 'No message'}`,
+                ].join('\n\n');
+                const issue = await createJiraIssue(summary, description);
+                console.log('Created Jira issue:', issue?.key || issue?.id || issue);
+            }
+        } catch (err) {
+            console.error('Failed to create Jira issue:', err);
+        }
     } else {
         await this.context.tracing.stop();
     }

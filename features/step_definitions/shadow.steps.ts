@@ -20,6 +20,28 @@ Given('I am on url {string}', { timeout }, async function (this: CustomWorld, ur
     await this.pageFixtures.basePage.navigateTo(url);
 });
 
+Given('I perform the TestMu simple form demo validation', { timeout }, async function (this: CustomWorld) {
+    const testMuUrl = 'https://www.testmuai.com/selenium-playground/';
+    const messageText = 'Welcome to TestMu AI';
+
+    await this.pageFixtures.basePage.navigateTo(testMuUrl);
+    await this.page.waitForURL(/selenium-playground\//);
+    await this.page.getByRole('link', { name: 'Simple Form Demo' }).click();
+
+    await expect(this.page).toHaveURL(/simple-form-demo/);
+
+    const enterMessageInput = this.page.locator('input#user-message').first();
+    await enterMessageInput.waitFor({ state: 'visible' });
+    await enterMessageInput.fill(messageText);
+
+    const getCheckedValueButton = this.page.getByRole('button', { name: 'Get Checked Value' });
+    await getCheckedValueButton.click();
+
+    const displayedMessage = this.page.locator('#message').first();
+    await expect(displayedMessage).toBeVisible();
+    await expect(displayedMessage).toContainText(messageText);
+});
+
 When('I enter {string} in Snacks field', { timeout }, async function (this: CustomWorld, fieldText: string ) {
     console.log(`I enter ${fieldText} in Snaks field`);
     await this.pageFixtures.shadowPage.enterTextInSnacksField(fieldText);

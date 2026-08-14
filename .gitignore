@@ -6,3 +6,4 @@ logs/
 reports/
 test-results/
 /.github/
+ .env
