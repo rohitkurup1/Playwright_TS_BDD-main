@@ -15,7 +15,11 @@ pipeline {
         git branch: 'main', url: 'https://github.com/rohitkurup1/Playwright_TS_BDD-main.git'
       }
     }
-
+stage('Install Playwright Browsers') {
+  steps {
+    bat 'npx playwright install'
+  }
+}
     stage('Install Dependencies') {
       steps {
         bat 'npm install'
