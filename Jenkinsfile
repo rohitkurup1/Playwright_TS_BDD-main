@@ -9,10 +9,6 @@ pipeline {
     )
   }
 
-  tools {
-    nodejs 'Node21'
-  }
-
   stages {
     stage('Checkout') {
       steps {
