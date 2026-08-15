@@ -15,6 +15,7 @@
     "format": [
       "json:reports/cucumber_report.json",
       "html:reports/cucumber_report.html",
+      "junit:reports/cucumber_report.xml",
       "pretty",
       "summary",
       "progress"

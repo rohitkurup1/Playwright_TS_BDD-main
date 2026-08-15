@@ -47,9 +47,17 @@ pipeline {
 
   post {
     always {
-      cucumber fileIncludePattern: 'reports/cucumber_report.json'
-      archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
+        // Publish JUnit XML for Jenkins Analyzer
+        junit 'reports/cucumber_report.xml'
+
+        // Publish Cucumber JSON (if you have the Cucumber Reports plugin installed)
+        cucumber fileIncludePattern: 'reports/cucumber_report.json'
+
+        // Archive all reports (JSON, HTML, XML) for manual inspection
+        archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
     }
+}
+
 
     failure {
       script {
