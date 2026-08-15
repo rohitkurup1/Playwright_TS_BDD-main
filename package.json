@@ -7,8 +7,7 @@
   "scripts": {
     "report": "npx ts-node generate-report.ts",
     "report_multi": "npx ts-node generate-multi-report.ts",
-    "test": "npx cucumber-js --format json:cucumber.json --exit",
-    "test2": "npx cucumber-js --exit",
+    "test": "npx cucumber-js --exit",
     "test:chromium": "cross-env BROWSER=chromium npx cucumber-js --exit",
     "test:firefox": "BROWSER=firefox npx cucumber-js --exit",
     "test:webkit": "BROWSER=webkit npx cucumber-js --exit",
