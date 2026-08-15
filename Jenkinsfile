@@ -15,11 +15,13 @@ pipeline {
         git branch: 'main', url: 'https://github.com/rohitkurup1/Playwright_TS_BDD-main.git'
       }
     }
-stage('Install Playwright Browsers') {
-  steps {
-    bat 'npx playwright install'
-  }
-}
+
+    stage('Install Playwright Browsers') {
+      steps {
+        bat 'npx playwright install'
+      }
+    }
+
     stage('Install Dependencies') {
       steps {
         bat 'npm install'
@@ -42,13 +44,26 @@ stage('Install Playwright Browsers') {
       }
     }
   }
-   post {
-    always {
-      // Publish Cucumber HTML/JSON report (Cucumber reports plugin)
-      cucumber fileIncludePattern: 'reports/cucumber_report.json'
 
-      // Archive raw report files (json + html) so they're downloadable from the build page
+  post {
+    always {
+      cucumber fileIncludePattern: 'reports/cucumber_report.json'
       archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
+    }
+
+    failure {
+      script {
+        def issue = [
+          fields: [
+            project: [key: 'YOUR_PROJECT_KEY'],
+            summary: "Test Failure in ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
+            description: "Automated test run failed.\n\nBuild URL: ${env.BUILD_URL}\nEnvironment: ${params.ENV}\n\nCheck console output and Cucumber report for details.",
+            issuetype: [name: 'Bug']
+          ]
+        ]
+        def response = jiraNewIssue issue: issue, site: 'DemoProject'
+        echo "Created Jira issue: ${response.data.key}"
+      }
     }
   }
 }
