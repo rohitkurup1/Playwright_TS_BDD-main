@@ -56,8 +56,6 @@ pipeline {
         // Archive all reports (JSON, HTML, XML) for manual inspection
         archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
     }
-}
-
 
     failure {
       script {
