@@ -53,16 +53,24 @@ pipeline {
 
     failure {
       script {
-        def issue = [
-          fields: [
-            project: [key: 'SCRUM'],
-            summary: "Test Failure in ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
-            description: "Automated test run failed.\n\nBuild URL: ${env.BUILD_URL}\nEnvironment: ${params.ENV}\n\nCheck console output and Cucumber report for details.",
-            issuetype: [name: 'Story']
+        try {
+          def issue = [
+            fields: [
+              project: [key: 'SCRUM'],
+              summary: "Test Failure in ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
+              description: "Automated test run failed.\n\nBuild URL: ${env.BUILD_URL}\nEnvironment: ${params.ENV}\n\nCheck console output and Cucumber report for details.",
+              issuetype: [name: 'Story']
+            ]
           ]
-        ]
-        def response = jiraNewIssue issue: issue, site: 'DemoProject'
-        echo "Created Jira issue: ${response.data.key}"
+          echo "Attempting to create Jira issue with payload: ${issue}"
+          def response = jiraNewIssue issue: issue, site: 'DemoProject'
+          echo "Created Jira issue: ${response.data.key}"
+        } catch (Exception e) {
+          echo "===== JIRA TICKET CREATION FAILED ====="
+          echo "Error message: ${e.getMessage()}"
+          echo "Error class: ${e.getClass()}"
+          echo "========================================"
+        }
       }
     }
   }
