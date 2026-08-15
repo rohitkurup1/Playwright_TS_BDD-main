@@ -42,4 +42,13 @@ stage('Install Playwright Browsers') {
       }
     }
   }
+   post {
+    always {
+      // Publish Cucumber HTML/JSON report (Cucumber reports plugin)
+      cucumber fileIncludePattern: 'reports/cucumber_report.json'
+
+      // Archive raw report files (json + html) so they're downloadable from the build page
+      archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
+    }
+  }
 }
