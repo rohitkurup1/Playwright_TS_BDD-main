@@ -32,7 +32,7 @@ pipeline {
       steps {
         script {
           if (params.ENV == 'test') {
-            bat 'npm run test'
+            bat 'npm run test:report'
           } else if (params.ENV == 'uat') {
             bat 'npm run test:uat'
           } else if (params.ENV == 'rsdev1') {
