@@ -22,7 +22,7 @@ pipeline {
 
     stage('Install Dependencies') {
       steps {
-        sh 'npm install'
+        bat 'npm install'
       }
     }
 
@@ -30,11 +30,11 @@ pipeline {
       steps {
         script {
           if (params.ENV == 'test') {
-            sh 'npm run test'
+            bat 'npm run test'
           } else if (params.ENV == 'uat') {
-            sh 'npm run test:uat'
+            bat 'npm run test:uat'
           } else if (params.ENV == 'rsdev1') {
-            sh 'npm run test:rsdev1'
+            bat 'npm run test:rsdev1'
           } else {
             error "Unsupported ENV value: ${params.ENV}"
           }
