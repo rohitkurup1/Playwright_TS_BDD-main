@@ -55,10 +55,10 @@ pipeline {
       script {
         def issue = [
           fields: [
-            project: [key: 'YOUR_PROJECT_KEY'],
+            project: [key: 'SCRUM'],
             summary: "Test Failure in ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
             description: "Automated test run failed.\n\nBuild URL: ${env.BUILD_URL}\nEnvironment: ${params.ENV}\n\nCheck console output and Cucumber report for details.",
-            issuetype: [name: 'Bug']
+            issuetype: [name: 'Story']
           ]
         ]
         def response = jiraNewIssue issue: issue, site: 'DemoProject'
