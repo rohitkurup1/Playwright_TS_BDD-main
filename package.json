@@ -24,6 +24,8 @@
   "devDependencies": {
     "@cucumber/cucumber": "^12.6.0",
     "@playwright/test": "^1.58.2",
+    "@types/axios": "^0.9.36",
+    "@types/jira-client": "^7.1.9",
     "@types/node": "^25.2.3",
     "@types/pngjs": "^6.0.5",
     "cross-env": "^10.1.0",
@@ -34,6 +36,9 @@
     "ts-node": "^10.9.2"
   },
   "dependencies": {
+    "@types/adm-zip": "^0.5.8",
+    "adm-zip": "^0.6.0",
+    "axios": "^1.19.0",
     "dotenv": "^17.4.2",
     "jira-client": "^8.2.2",
     "winston": "^3.19.0"

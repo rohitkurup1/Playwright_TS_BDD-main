@@ -2,7 +2,7 @@ import { Before, BeforeAll, After, AfterAll, Status, AfterStep } from '@cucumber
 import fs from 'fs';
 import path from 'path';
 import { CustomWorld } from './world';
-import { createJiraIssue } from '../../utils/jiraHelper';
+import { triageAndFileDefect } from '../../utils/trace-agent/triageAndFileDefect';
 
 BeforeAll(function () {
     console.log(`$$$$$ BeforeAll hook executed $$$$$`);    
@@ -41,15 +41,25 @@ After(async function (this: CustomWorld, scenario) {
     this.attach(testInfoJson, 'application/json');
 
     console.log(`###### After hook executed for scenario: ${scenario.pickle.name} with status: ${scenario.result?.status} ######`);
-    
+
     if (scenario.result?.status === Status.FAILED && this.page) {
         const tracePath = `test-results/traces/${scenario.pickle.name.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}.zip`;
         await this.context.tracing.stop({ path: tracePath });
         console.log(`Trace saved at: ${tracePath}`);
-        
+
+        const triage = await triageAndFileDefect({
+            tracePath,
+            scenarioName: scenario.pickle.name,
+            testFile: (scenario as any).sourceLocation?.uri || 'unknown',
+            errorMessage: scenario.result?.message || 'No error message',
+        });
+        if (triage) {
+            this.attach(JSON.stringify(triage, null, 2), 'application/json');
+        }
+
         const screenshot = await this.page.screenshot({ fullPage: true });
         this.attach(screenshot, 'image/png');
-        
+
         if (scenario.result?.message) {
             const cleanError = scenario.result.message
                 .replace(/\u001b\[[0-9;]*m/g, '')
@@ -57,29 +67,15 @@ After(async function (this: CustomWorld, scenario) {
                 .replace(/\[22m|\[2m|\[31m|\[39m|\[32m|\[7m|\[27m/g, '');
             this.attach(`Error: ${cleanError}`, 'text/plain');
         }
-        
+
         console.log(`Screenshot attached to report`);
-        // Optionally create a Jira issue when enabled via env var
-        try {
-            if (process.env.LOG_JIRA === 'true') {
-                const summary = `BDD Test failed: ${scenario.pickle.name}`;
-                const description = [
-                    `Scenario: ${scenario.pickle.name}`,
-                    `File: ${(scenario as any).sourceLocation?.uri || (scenario as any).sourceLocation?.path || 'unknown'}`,
-                    `Error: ${scenario.result?.message || 'No message'}`,
-                ].join('\n\n');
-                const issue = await createJiraIssue(summary, description);
-                console.log('Created Jira issue:', issue?.key || issue?.id || issue);
-            }
-        } catch (err) {
-            console.error('Failed to create Jira issue:', err);
-        }
     } else {
         await this.context.tracing.stop();
     }
     await this.close();
 });
- AfterStep(async function (this: CustomWorld, step) {
+
+AfterStep(async function (this: CustomWorld, step) {
     if (this.logs.length > 0) {
         this.attach(this.logs.join('\n'), 'text/plain');
     }
