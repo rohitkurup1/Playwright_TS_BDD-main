@@ -43,41 +43,26 @@ pipeline {
         }
       }
     }
+
+    stage('Trace Agent Analysis') {
+      when {
+        expression { currentBuild.result == 'FAILURE' }
+      }
+      steps {
+        script {
+          echo "Running Trace Agent on Playwright artifacts..."
+          // Example: run your Node.js trace agent script
+          bat 'node trace-agent.js reports/trace.zip reports/cucumber_report.json'
+        }
+      }
+    }
   }
 
   post {
     always {
-        // Publish JUnit XML for Jenkins Analyzer
-        junit 'reports/cucumber_report.xml'
-
-        // Publish Cucumber JSON (if you have the Cucumber Reports plugin installed)
-        cucumber fileIncludePattern: 'reports/cucumber_report.json'
-
-        // Archive all reports (JSON, HTML, XML) for manual inspection
-        archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
-    }
-
-    failure {
-      script {
-        try {
-          def issue = [
-            fields: [
-              project: [key: 'SCRUM'],
-              summary: "Test Failure in ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
-              description: "Automated test run failed.\n\nBuild URL: ${env.BUILD_URL}\nEnvironment: ${params.ENV}\n\nCheck console output and Cucumber report for details.",
-              issuetype: [name: 'Story']
-            ]
-          ]
-          echo "Attempting to create Jira issue with payload: ${issue}"
-          def response = jiraNewIssue issue: issue, site: 'DemoProject'
-          echo "Created Jira issue: ${response.data.key}"
-        } catch (Exception e) {
-          echo "===== JIRA TICKET CREATION FAILED ====="
-          echo "Error message: ${e.getMessage()}"
-          echo "Error class: ${e.getClass()}"
-          echo "========================================"
-        }
-      }
+      junit 'reports/cucumber_report.xml'
+      cucumber fileIncludePattern: 'reports/cucumber_report.json'
+      archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
     }
   }
 }
